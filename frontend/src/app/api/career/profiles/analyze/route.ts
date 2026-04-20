@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createMemoryProfile, findMemoryProfileByEmail, updateMemoryProfile } from '@/lib/memoryStore';
-import { generateCareerSnapshot } from '@/lib/ai.service';
+import { generateCareerSnapshot, getAiConfigStatus } from '@/lib/ai.service';
 import { extractTextFromBase64Document } from '@/lib/document';
 
 function normalizeList(input: unknown) {
@@ -41,6 +41,7 @@ export async function POST(request: Request) {
 
     const snapshot = await generateCareerSnapshot(input);
     const now = new Date().toISOString();
+    const ai = getAiConfigStatus();
 
     const existing = findMemoryProfileByEmail(input.email);
     const nextRecord = {
@@ -64,7 +65,22 @@ export async function POST(request: Request) {
       ? updateMemoryProfile(existing.id, (current) => ({ ...current, ...nextRecord }))!
       : createMemoryProfile(nextRecord);
 
-    return NextResponse.json({ success: true, data: { profile: saved, meta: { aiProvider: snapshot.aiProvider, storage: 'memory' } } });
+    return NextResponse.json({
+      success: true,
+      data: {
+        profile: saved,
+        meta: {
+          aiProvider: snapshot.aiProvider,
+          storage: 'memory',
+          aiConfigured: ai.configured,
+          availableProviders: ai.availableProviders,
+          warning:
+            snapshot.aiProvider === 'rules'
+              ? 'Using fallback rules. Add OPENAI_API_KEY or GEMINI_API_KEY to the frontend deployment environment for real AI responses.'
+              : undefined,
+        },
+      },
+    });
   } catch (error) {
     console.error('Analyze error:', error);
     return NextResponse.json({ success: false, error: 'Failed to analyze profile.' }, { status: 500 });

@@ -63,9 +63,20 @@ const SKILL_LIBRARY = [
   'Tailwind CSS',
   'Testing',
   'TypeScript',
+  'Programming',
+  'Algorithms',
 ];
 
 const ROLE_BLUEPRINTS: Record<string, RoleBlueprint> = {
+  'Software Engineer': {
+    mustHave: ['Programming', 'Data Structures', 'Algorithms', 'Git', 'Testing', 'System Design'],
+    projects: [
+      { title: 'Issue Tracker Platform', summary: 'Build a full product workflow for creating, assigning, and tracking engineering tasks.', techStack: ['TypeScript', 'React', 'Node.js', 'PostgreSQL'], steps: ['Design the product flows', 'Implement authenticated CRUD APIs', 'Build responsive dashboards', 'Add tests and deployment config'], difficulty: 'Intermediate', portfolioValue: 'Shows end-to-end product engineering and practical software design.' },
+      { title: 'Code Review Assistant', summary: 'Create a tool that analyzes pull requests and highlights likely bugs, missing tests, and risk areas.', techStack: ['Python', 'FastAPI', 'OpenAI API', 'PostgreSQL'], steps: ['Model repository and PR inputs', 'Create risk scoring rules', 'Generate grounded review comments', 'Track reviewer feedback quality'], difficulty: 'Advanced', portfolioValue: 'Demonstrates applied AI, backend design, and developer tooling.' },
+      { title: 'Campus Placement Portal', summary: 'Build a role-based placement workflow for students, recruiters, and coordinators.', techStack: ['Next.js', 'Node.js', 'MongoDB', 'JWT'], steps: ['Design user roles and permissions', 'Build application and status flows', 'Add recruiter dashboards', 'Ship analytics and notifications'], difficulty: 'Intermediate', portfolioValue: 'Proves you can ship a complete software product with real user workflows.' },
+    ],
+    interviewThemes: ['problem solving', 'coding fundamentals', 'testing mindset', 'system design basics'],
+  },
   'Data Scientist': {
     mustHave: ['Python', 'SQL', 'Statistics', 'Machine Learning', 'Pandas', 'Data Visualization'],
     projects: [
@@ -100,11 +111,31 @@ function normalizeRole(role: string) {
   if (directMatch) return directMatch;
 
   const lowerRole = role.toLowerCase();
+  if (
+    lowerRole === 'software' ||
+    lowerRole.includes('software engineer') ||
+    lowerRole.includes('software developer') ||
+    lowerRole.includes('application developer') ||
+    lowerRole.includes('full stack') ||
+    lowerRole.includes('fullstack')
+  ) return 'Software Engineer';
   if (lowerRole.includes('data')) return 'Data Scientist';
   if (lowerRole.includes('front') || lowerRole.includes('ui') || lowerRole.includes('web')) return 'Frontend Developer';
   if (lowerRole.includes('back') || lowerRole.includes('api') || lowerRole.includes('server')) return 'Backend Developer';
 
   return DEFAULT_ROLE;
+}
+
+export function getAiConfigStatus() {
+  const availableProviders = [
+    process.env.GEMINI_API_KEY ? 'gemini' : null,
+    process.env.OPENAI_API_KEY ? 'openai' : null,
+  ].filter((value): value is string => Boolean(value));
+
+  return {
+    configured: availableProviders.length > 0,
+    availableProviders,
+  };
 }
 
 function parseList(input: string) {

@@ -7,7 +7,7 @@ export default function ProfileSummary({
   meta,
 }: {
   profile: CareerProfile;
-  meta?: { aiProvider: string; storage: string } | null;
+  meta?: { aiProvider: string; storage: string; aiConfigured?: boolean; availableProviders?: string[]; warning?: string } | null;
 }) {
   return (
     <div className="panel-stack">
@@ -42,6 +42,7 @@ export default function ProfileSummary({
           <span className="tag">Storage: {meta?.storage ?? 'saved profile'}</span>
           <span className="tag">{profile.email}</span>
         </div>
+        {meta?.warning ? <p className="muted-copy">{meta.warning}</p> : null}
       </section>
 
       <section className="surface">

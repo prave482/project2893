@@ -8,6 +8,9 @@ import { analyzeCareerProfile, CareerProfile } from '@/lib/api';
 type ProfileMeta = {
   aiProvider: string;
   storage: string;
+  aiConfigured?: boolean;
+  availableProviders?: string[];
+  warning?: string;
 };
 
 type Props = {

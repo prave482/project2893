@@ -10,6 +10,9 @@ const PROFILE_META_KEY = 'ai-career-copilot-profile-meta';
 type ProfileMeta = {
   aiProvider: string;
   storage: string;
+  aiConfigured?: boolean;
+  availableProviders?: string[];
+  warning?: string;
 };
 
 export function useCareerProfile() {

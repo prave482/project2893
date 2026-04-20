@@ -22,7 +22,7 @@ AI Career Copilot is a full-stack web application that analyzes a user's resume 
 `frontend/`
 - Next.js dashboard UI
 - Responsive sections for resume upload, analysis, projects, interview, and progress
-- Connected to backend REST APIs via Axios
+- Connected to backend REST APIs via Axios, with local Next.js API routes for single-deployment hosting
 
 ## Run Locally
 
@@ -44,9 +44,15 @@ npm run dev
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4o-mini
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-2.0-flash
 ```
 
-2. Start the frontend:
+2. If you deploy only the `frontend` app to Vercel, set `OPENAI_API_KEY` or `GEMINI_API_KEY` in the frontend project environment variables. Otherwise the app will fall back to rules-based analysis.
+
+3. Start the frontend:
 
 ```bash
 cd frontend

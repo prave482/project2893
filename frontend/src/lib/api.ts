@@ -66,7 +66,7 @@ export async function analyzeCareerProfile(payload: AnalyzePayload) {
   const response = await api.post('/career/profiles/analyze', payload);
   return response.data.data as {
     profile: CareerProfile;
-    meta: { aiProvider: string; storage: string };
+    meta: { aiProvider: string; storage: string; aiConfigured?: boolean; availableProviders?: string[]; warning?: string };
   };
 }
 
