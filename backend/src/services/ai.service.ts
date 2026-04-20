@@ -82,6 +82,36 @@ const SKILL_LIBRARY = [
 ];
 
 const ROLE_BLUEPRINTS: Record<string, RoleBlueprint> = {
+  'AI Developer': {
+    mustHave: ['Python', 'SQL', 'Machine Learning', 'API Integration', 'Testing', 'System Design'],
+    projects: [
+      {
+        title: 'AI Support Copilot',
+        summary: 'Build a support assistant that retrieves knowledge, drafts answers, and escalates uncertain cases.',
+        techStack: ['Python', 'FastAPI', 'Vector DB', 'OpenAI API'],
+        steps: ['Prepare support knowledge sources', 'Implement retrieval and prompt flow', 'Add answer confidence checks', 'Measure response quality with test cases'],
+        difficulty: 'Advanced',
+        portfolioValue: 'Shows applied LLM engineering, API design, and evaluation discipline.',
+      },
+      {
+        title: 'Resume Match Analyzer',
+        summary: 'Create a tool that compares resumes against job descriptions and explains fit, risks, and skill gaps.',
+        techStack: ['Python', 'SQL', 'React', 'LLM API'],
+        steps: ['Parse candidate and role inputs', 'Build scoring and explanation logic', 'Add grounded recommendation generation', 'Track feedback on relevance'],
+        difficulty: 'Intermediate',
+        portfolioValue: 'Demonstrates AI product thinking with grounded output generation.',
+      },
+      {
+        title: 'Meeting Notes Intelligence API',
+        summary: 'Turn meeting transcripts into summaries, action items, and searchable decisions.',
+        techStack: ['Node.js', 'PostgreSQL', 'LLM API', 'Next.js'],
+        steps: ['Ingest transcript data', 'Generate structured outputs', 'Add evaluation cases for hallucination control', 'Ship a dashboard for reviewing results'],
+        difficulty: 'Advanced',
+        portfolioValue: 'Highlights end-to-end AI feature delivery and quality safeguards.',
+      },
+    ],
+    interviewThemes: ['llm applications', 'prompt design', 'evaluation', 'backend integration'],
+  },
   'Software Engineer': {
     mustHave: ['Programming', 'Data Structures', 'Algorithms', 'Git', 'Testing', 'System Design'],
     projects: [
@@ -209,6 +239,16 @@ function normalizeRole(role: string) {
   if (directMatch) return directMatch;
 
   const lowerRole = role.toLowerCase();
+  if (
+    lowerRole === 'ai' ||
+    lowerRole.includes('ai developer') ||
+    lowerRole.includes('ai engineer') ||
+    lowerRole.includes('gen ai') ||
+    lowerRole.includes('generative ai') ||
+    lowerRole.includes('llm')
+  ) {
+    return 'AI Developer';
+  }
   if (
     lowerRole === 'software' ||
     lowerRole.includes('software engineer') ||
