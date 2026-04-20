@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createMemoryProfile, findMemoryProfileByEmail, findMemoryProfileById, updateMemoryProfile } from '@/lib/memoryStore';
-import { generateCareerSnapshot, generateInterviewQuestionsForProfile, generateProjectsForProfile, evaluateInterviewAnswer, buildProgressSnapshot } from '@/lib/ai.service';
-import { CareerProfileRecord } from '@/lib/types';
+import { createMemoryProfile, findMemoryProfileByEmail, updateMemoryProfile } from '@/lib/memoryStore';
+import { generateCareerSnapshot } from '@/lib/ai.service';
 
 function normalizeList(input: unknown) {
   if (Array.isArray(input)) return input.map((item) => String(item).trim()).filter(Boolean);
@@ -21,26 +20,6 @@ function buildSnapshotInput(payload: Record<string, unknown>) {
   };
 }
 
-function serializeProfile(doc: any): CareerProfileRecord {
-  return {
-    id: String(doc._id ?? doc.id),
-    fullName: doc.fullName,
-    email: doc.email,
-    targetRole: doc.targetRole,
-    careerGoals: doc.careerGoals ?? [],
-    skills: doc.skills ?? [],
-    resumeText: doc.resumeText ?? '',
-    resumeFileName: doc.resumeFileName,
-    analysis: doc.analysis,
-    skillGap: doc.skillGap,
-    projects: doc.projects ?? [],
-    interviewQuestions: doc.interviewQuestions ?? [],
-    progress: doc.progress,
-    createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : String(doc.createdAt),
-    updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : String(doc.updatedAt),
-  };
-}
-
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -50,7 +29,7 @@ export async function POST(request: Request) {
     if (!input.email) return NextResponse.json({ success: false, error: 'Email is required.' }, { status: 400 });
     if (!input.targetRole) return NextResponse.json({ success: false, error: 'Target role is required.' }, { status: 400 });
     if (!input.resumeText && !input.skills.length) {
-      return NextResponse.json({ success: false, error: 'Provide a resume or list at least a few skills.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Provide resume text or list at least a few skills.' }, { status: 400 });
     }
 
     const snapshot = await generateCareerSnapshot(input);
