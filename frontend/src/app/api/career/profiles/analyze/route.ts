@@ -31,7 +31,9 @@ function buildSnapshotInput(payload: Record<string, unknown>) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log('Analyze request body:', { ...body, resumeFileBase64: body.resumeFileBase64 ? '[BASE64_LENGTH:' + body.resumeFileBase64.length + ']' : undefined });
     const input = buildSnapshotInput(body);
+    console.log('Built input:', { ...input, resumeText: input.resumeText ? '[TEXT_SET]' : '[EMPTY]' });
 
     if (!input.fullName) return NextResponse.json({ success: false, error: 'Full name is required.' }, { status: 400 });
     if (!input.email) return NextResponse.json({ success: false, error: 'Email is required.' }, { status: 400 });
@@ -40,7 +42,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Provide resume text or list at least a few skills.' }, { status: 400 });
     }
 
+    console.log('Calling generateCareerSnapshot...');
     const snapshot = await generateCareerSnapshot(input);
+    console.log('Snapshot generated:', snapshot.aiProvider);
     const now = new Date().toISOString();
 
     const existing = findMemoryProfileByEmail(input.email);
