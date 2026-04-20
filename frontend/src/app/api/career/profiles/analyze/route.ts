@@ -9,13 +9,21 @@ function normalizeList(input: unknown) {
 }
 
 function buildSnapshotInput(payload: Record<string, unknown>) {
+  const resumeTextInput = String(payload.resumeText ?? '').trim();
+  const resumeFileBase64 = payload.resumeFileBase64 ? String(payload.resumeFileBase64) : '';
+  
+  let finalResumeText = resumeTextInput;
+  if (!resumeTextInput && resumeFileBase64) {
+    finalResumeText = '[PDF file uploaded - please analyze based on user skills and target role]';
+  }
+  
   return {
     fullName: String(payload.fullName ?? '').trim(),
     email: String(payload.email ?? '').trim().toLowerCase(),
     targetRole: String(payload.targetRole ?? '').trim(),
     careerGoals: normalizeList(payload.careerGoals),
     skills: normalizeList(payload.skills),
-    resumeText: String(payload.resumeText ?? '').trim(),
+    resumeText: finalResumeText,
     resumeFileName: payload.resumeFileName ? String(payload.resumeFileName) : undefined,
   };
 }

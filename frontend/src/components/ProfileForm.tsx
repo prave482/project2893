@@ -84,11 +84,6 @@ export default function ProfileForm({ onProfileReady }: Props) {
       return;
     }
 
-    if (file.type === 'application/pdf') {
-      toast.error('PDF upload temporarily unavailable. Please paste resume text directly or upload a .txt file instead.');
-      return;
-    }
-
     const base64 = await fileToBase64(file);
     setForm((current) => ({
       ...current,
