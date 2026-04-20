@@ -1,13 +1,7 @@
 import axios from 'axios';
 
-function normalizeApiBase(url?: string) {
-  const fallback = '/api';
-  const value = (url || fallback).trim().replace(/\/$/, '');
-  return value.endsWith('/api') ? value : `${value}/api`;
-}
-
 const api = axios.create({
-  baseURL: normalizeApiBase(process.env.NEXT_PUBLIC_API_URL || '/api'),
+  baseURL: '',
 });
 
 export type CareerProfile = {
